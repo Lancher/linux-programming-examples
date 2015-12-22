@@ -6,7 +6,7 @@ Some simple linux programming codes.
 
 --
 
-##### # Memory and Allocaton:
+##### #1 Memory and Allocaton:
 
 - Memory alignment please refer to `Sven-Hendrik Haase - Alignment in C`.
 
@@ -17,7 +17,7 @@ Some simple linux programming codes.
 
 --
 
-##### # Users and Groups:
+##### #2 Users and Groups:
 
 - Retrieve info in `/etc/passwd` and `/etc/group`.
 
@@ -27,70 +27,27 @@ Some simple linux programming codes.
 
 --
 
-##### # Process Credentials:
+##### #3 Process Credentials:
 
-Show user ID:
-```
-$ id
-uid=1000(vagrant) gid=1000(vagrant) groups=1000(vagrant)
-```
+- Relation between real user ID(real uid, or ruid), the effective user ID (effective uid, or euid), and the saved user ID (saved uid, or suid).
 
-Show all the IDs of a process:
-```
-$ ps -eo pid,ruid,euid,suid | grep YOUR_PID_HERE
-2062  1000  1000  1000
-```
-
-The `a.out` is started by your login shell so it will be the vagrant ID.
-```
-$ sudo chown root:root ./a.out
-$ ./a.out
-ruid=1000, euid=1000, suid=1000
-ruid=1000, euid=1000, suid=1000
-```
-
-Command "chmod 4755" will change the euid and suid to the same value as owner ID root 0:
-```
-$ sudo chown root:root ./a.out
-$ sudo chmod 4755 ./a.out
-$ ./a.out
-ruid=1000, euid=0, suid=0
-ruid=1000, euid=1000, suid=1000
-```
-
-Change the euid and suid to owner ID nobody 65534:
-```
-$ sudo chown nobody ./a.out
-$ sudo chmod 4755 ./a.out
-$ ./a.out
-uid=1000, euid=65534, suid=65534
-setuid(1000)
-setuid() : Success
-ruid=1000, euid=1000, suid=65534
-```
-
-The "sudo" means you login as root to execute “a.out”:
-```
-$ sudo ./a.out
-uid=0, euid=0, suid=0
-setuid(1000)
-setuid() : Operation not permitted
-ruid=1000, euid=1000, suid=1000
-```
-
-The "sudo" means you login as root to execute “a.out” but "chmod 4755" will change the euid and suid to the same value as owner ID nobody 65534:
-```
-$ sudo chown nobody ./a.out
-$ sudo chmod 4755 ./a.out
-$ sudo ./a.out
-uid=0, euid=65534, suid=65534
-setuid(1000)
-setuid() : Operation not permitted
-ruid=0, euid=65534, suid=65534
-```
+- Please refer to paper `Setuid Demystified` for more details.
 
 | Code | Descriptions  |
 | --- | --- |
 | [process_cred.c](src/process_cred.c) | Observe a process's real UID, effective UID and save UID.|
+
+--
+
+##### #4 Time:
+
+- Conversions between `time()`, `gmtime()`, `localtime()`, `asctime()`, `ctime()` and `mktime().`
+
+- Process Time is divide to `User CPU time`(the time of the program access CPU) and `System CPU Time`(the time of kernel system call, page faults..).
+
+| Code | Descriptions  |
+| --- | --- |
+| [time.c](src/time.c) | Time functions.|
+| [process_time.c](src/process_time.c) | Get the User CPU Time and System CPU Time.|
 
 --
