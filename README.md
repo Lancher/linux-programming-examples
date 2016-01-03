@@ -6,7 +6,7 @@ Some simple linux programming codes.
 
 --
 
-##### #1 Memory and Allocaton:
+#####  Memory and Allocaton:
 
 - Memory alignment please refer to `Sven-Hendrik Haase - Alignment in C`.
 
@@ -17,7 +17,7 @@ Some simple linux programming codes.
 
 --
 
-##### #2 Users and Groups:
+##### Users and Groups:
 
 - Retrieve info in `/etc/passwd` and `/etc/group`.
 
@@ -27,7 +27,7 @@ Some simple linux programming codes.
 
 --
 
-##### #3 Process Credentials:
+##### Process Credentials:
 
 - Relation between real user ID(real uid, or ruid), the effective user ID (effective uid, or euid), and the saved user ID (saved uid, or suid).
 
@@ -39,7 +39,7 @@ Some simple linux programming codes.
 
 --
 
-##### #4 Time:
+##### Time:
 
 - Conversions between `time()`, `gmtime()`, `localtime()`, `asctime()`, `ctime()` and `mktime().`
 
@@ -51,3 +51,17 @@ Some simple linux programming codes.
 | [process_time.c](src/process_time.c) | Get the User CPU Time and System CPU Time.|
 
 --
+
+##### File I/O:
+
+- The `read()` and “write()` system calls don’t directly initiate disk access. Instead, they simply copy data between a user-space buffer and a buffer in the kernel buffer cache.
+
+
+| Code | Descriptions  |
+| --- | --- |
+| [direct_io.c](src/direct_io.c) | Using `O_DIRECT` to bypass the buffer cache.|
+| [file_info.c](src/file_info.c) | Get file flags and permission.|
+
+--
+
+
