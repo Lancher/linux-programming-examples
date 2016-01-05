@@ -61,6 +61,7 @@ Some simple linux programming codes.
 | --- | --- |
 | [direct_io.c](src/direct_io.c) | Using `O_DIRECT` to bypass the buffer cache.|
 | [file_info.c](src/file_info.c) | Get file flags and permission.|
+| [inotify.c](src/inotify.c) | Use inotify to monitor files or directories .|
 
 --
 

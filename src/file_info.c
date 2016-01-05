@@ -14,7 +14,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Using O_DIRECT to bypass kernel buffer cache.
+// Retrive all the information of a file.
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -101,6 +102,5 @@ main (int argc, char **argv)
   printf ("\n\n");
 
   printf("The file %s a symbolic link\n", (S_ISLNK (fstat.st_mode)) ? "is" : "is not");
-
 
 }
