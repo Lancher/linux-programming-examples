@@ -14,51 +14,38 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Using O_DIRECT to bypass kernel buffer cache.
+// Signal handler for SIGINT.
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <sys/types.h>          // ssize_t, size_t
-#include <fcntl.h>              // O_RDONLY, O_DIRECT
+#include <signal.h>
 
 #include <errno.h>              // errno, perror()
 
 int
 main (int argc, char **argv)
 {
-  int r, fd;
-  ssize_t numRead;
-  size_t length;
-  off_t offset;
-  void *buf;
+  int sig, r;
 
   // Usage.
-  if (argc < 2) {
-    printf ("Usage: %s <filepath>\n", argv[0]);
+  if (argc != 3) {
+    printf ("Usage: %s <process id> <signal num>\n", argv[0]);
     exit (EXIT_SUCCESS);
   }
 
-  // Open file with direct io.
-  if ((fd = open (argv[1], O_RDONLY | O_DIRECT)) < 0) {
-    perror ("open() ");
+  // Send the signal.
+  // If sig is equal to 0 (null signal), means the kill() will only check if the process
+  // can be signaled.
+  if (kill (atoi (argv[1]), atoi(argv[2])) < 0) {
+    // Not permission.
+    if (errno == EPERM)
+      perror ("kill() ");
+    // Process not exist.
+    else if (errno == ESRCH)
+      perror ("kill() ");
     exit (EXIT_FAILURE);
   }
-
-  // The data buffer being transferred must be aligned to blocksize.
-  r = posix_memalign (&buf, 4096, 10000);
-  // The file or device offset at which data transfer commences must be a multiple of the block size.
-  offset = 0;
-  // The length of the data to be transferred must be a multiple of the block size.
-  length = 4096;
-
-  // Read operation.
-  if ((numRead = read(fd, buf, length)) < 0) {
-    perror ("read() ");
-    exit (EXIT_FAILURE);
-  }
-  printf ("%d bytes read.", (int) numRead);
 
   exit(EXIT_SUCCESS);
 }

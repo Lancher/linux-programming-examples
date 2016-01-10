@@ -63,6 +63,18 @@ Some simple linux programming codes.
 | [file_info.c](src/file_info.c) | Get file flags and permission.|
 | [inotify.c](src/inotify.c) | Use inotify to monitor files or directories .|
 
+##### Signal:
+
+- If signal number is equal to 0, means the `kill()` will only check if the process can be signaled.
+
+- If the same signal is generated multiple times while it is blocked, then it is recorded in the set of pending signals, and later delivered, just once.
+
+| Code | Descriptions  |
+| --- | --- |
+| [signal_handler.c](src/signal_handler.c) | Construct a simple signal handler.|
+| [signal_send.c](src/signal_send.c) | Send a signal to  specified process.|
+| [signal_mask_penfing.c](src/signal_mask_penfing.c) | Multiple signals delivery to a process with signal mask.|
+
 --
 
 
