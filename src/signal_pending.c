@@ -86,6 +86,7 @@ main (int argc, char **argv)
 }
 
 // This handler uses non-async-signal-safe functions(printf(), exit()).
+// Yout should use "volatile sig_atomic_t" as a global flag.
 void handler (int sig) {
   static int count = 0;
 
