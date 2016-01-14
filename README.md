@@ -69,11 +69,11 @@ Some simple linux programming codes.
 
 - If the same signal is generated multiple times while it is blocked, then it is recorded in the set of pending signals, and later delivered, just once.
 
-| Code | Descriptions  |
+| Code | Descriptions |
 | --- | --- |
 | [signal_handler.c](src/signal_handler.c) | Construct a simple signal handler.|
-| [signal_send.c](src/signal_send.c) | Send a signal to  specified process.|
-| [signal_mask_penfing.c](src/signal_mask_penfing.c) | Multiple signals delivery to a process with signal mask.|
+| [signal_send.c](src/signal_send.c) | Use a signal to check if a process exist.|
+| [signal_pending.c](src/signal_pending.c) | Multiple signals delivery to a process with signal mask.|
 
 --
 
