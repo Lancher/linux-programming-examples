@@ -63,6 +63,8 @@ Some simple linux programming codes.
 | [file_info.c](src/file_info.c) | Get file flags and permission.|
 | [inotify.c](src/inotify.c) | Use inotify to monitor files or directories .|
 
+--
+
 ##### Signal:
 
 - If signal number is equal to 0, means the `kill()` will only check if the process can be signaled.
@@ -74,6 +76,22 @@ Some simple linux programming codes.
 | [signal_handler.c](src/signal_handler.c) | Construct a simple signal handler.|
 | [signal_send.c](src/signal_send.c) | Use a signal to check if a process exist.|
 | [signal_pending.c](src/signal_pending.c) | Multiple signals delivery to a process with signal mask.|
+
+--
+
+##### Process:
+
+- The `fork()` allow one process, the parent, to create a child process. The child obtains the copies of stack, data, heap and text segments.
+
+- File descriptors is also share between parent and child (use `dup()`).
+
+- The `vfork()` will not copy the parent process's memory space.
+
+| Code | Descriptions |
+| --- | --- |
+| [process_child.c](src/process_child.c) | Create a child process.|
+| [process_vfork.c](src/process_vfork.c) | How vfork() is different from fork().|
+| [process_sig.c](src/process_sig.c) | Send signal from child to parent.|
 
 --
 
