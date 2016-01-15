@@ -92,6 +92,7 @@ Some simple linux programming codes.
 | [process_child.c](src/process_child.c) | Create a child process.|
 | [process_vfork.c](src/process_vfork.c) | How vfork() is different from fork().|
 | [process_sig.c](src/process_sig.c) | Send signal from child to parent.|
+| [process_exit_handler.c](src/process_exit_handler.c) | Demonstrate the "atexit()" and "on_exit()".|
 
 --
 
