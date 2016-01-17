@@ -93,7 +93,8 @@ Some simple linux programming codes.
 | [process_vfork.c](src/process_vfork.c) | How vfork() is different from fork().|
 | [process_sig.c](src/process_sig.c) | Send signal from child to parent.|
 | [process_exit_handler.c](src/process_exit_handler.c) | Demonstrate the "atexit()" and "on_exit()".|
-
+| [process_wait.c](src/process_wait.c) | Wait children.|
+| [process_zombie.c](src/process_zombie.c) | Create a Zombie process.|
 --
 
 

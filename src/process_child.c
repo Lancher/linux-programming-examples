@@ -39,8 +39,6 @@ main (int argc, char **argv)
   // pid == 0, the child process.
   else if (pid == 0) {
     printf ("This is child with pid %u and parent pid %u\n", getpid(), getppid());
-    fflush (stdout);
-
   }
   // pid > 0, the parent process..
   else {
@@ -48,7 +46,6 @@ main (int argc, char **argv)
     // Do not let child process become an orphan process.
     // An orphan process will be adopted by INIT process (pid is 1).
     sleep (3);
-    fflush (stdout);
   }
 
   exit (EXIT_SUCCESS);

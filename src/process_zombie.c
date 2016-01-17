@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// How vfork() is different from fork().
+// Create a Zombie process.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,38 +27,23 @@ int
 main (int argc, char **argv)
 {
   pid_t pid;
-  int val = 10;
 
   // Create a child process.
-  pid = vfork();
+  pid = fork();
 
   // pid == -1, failed to create a process.
   if (pid < 0) {
-    perror ("vfork() ");
+    perror ("fork() ");
     exit (EXIT_FAILURE);
   }
   // pid == 0, the child process.
-  // Child process will use parent process's memory space until "execve()" or "_exit()" be called.
   else if (pid == 0) {
-    printf ("This is child with pid %u and parent pid %u.\n", getpid(), getppid());
-
-    // Sleep 3s.
-    printf ("Sleep 3s.\n");
     sleep (3);
-
-    // This will change the parent's "val".
-    val = 100;
-
-    // After _exit(), the parent will kstart running.
-    _exit (EXIT_SUCCESS);
   }
-  // pid > 0, the parent process.
-  // Parent process will block until child process call "execve()" or "_exit()".
+  // pid > 0, the parent process..
   else {
-    printf ("This is parent with pid %u.\n", getpid());
+    pause ();
   }
-
-  printf ("val: %d\n", val);
 
   exit (EXIT_SUCCESS);
 }
