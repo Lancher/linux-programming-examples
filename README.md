@@ -95,6 +95,13 @@ Some simple linux programming codes.
 | [process_exit_handler.c](src/process_exit_handler.c) | Demonstrate the "atexit()" and "on_exit()".|
 | [process_wait.c](src/process_wait.c) | Wait children.|
 | [process_zombie.c](src/process_zombie.c) | Create a Zombie process.|
+
 --
 
+##### Thread:
 
+- Use `clone()` to create a thread.
+
+| Code | Descriptions |
+| --- | --- |
+| [thread_create.c](src/thread_create.c) | Create a simple thread.|
