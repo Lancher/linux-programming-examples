@@ -85,7 +85,7 @@ Some simple linux programming codes.
 
 - File descriptors is also share between parent and child (use `dup()`).
 
-- The `vfork()` will not copy the parent process's memory space.
+- The `vfork()` will not copy the parent process's memory space until `exec()` or exit()`.
 
 | Code | Descriptions |
 | --- | --- |

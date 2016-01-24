@@ -19,6 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <unistd.h>             // sbrk()
+
+#include <errno.h>              // errno, perror()
+
 int
 main (int argc, char **argv)
 {
@@ -27,25 +31,25 @@ main (int argc, char **argv)
   int *ptr[nums_of_blocks];
 
   // Before mallocing huge memory, print the break point;
-  printf ("Before malloc %d blocks, break point %10p\n", nums_of_blocks, (void *)sbrk (0));
+  printf ("Before malloc %d blocks, break point %10p\n", nums_of_blocks, sbrk (0));
 
   // Allocate nums_of_blocks * blocksize bytes memory.
   for (i = 0; i < nums_of_blocks; i++)
     ptr[i] = malloc (blocksize);
 
   // After mallocing huge memory, print the break point;
-  printf ("After malloc %d, break point %10p\n", nums_of_blocks, (void *)sbrk (0));
+  printf ("After malloc %d, break point %10p\n", nums_of_blocks, sbrk (0));
 
   // Free the block from 0 ~ 498.
   for (i = 0; i < nums_of_blocks - 1; i++)
     free (ptr[i]);
 
-  printf ("After free the block 0 ~ 498, break point %10p\n", (void *)sbrk (0));
+  printf ("After free the block 0 ~ 498, break point %10p\n", sbrk (0));
 
   // Free the last block.
   free (ptr[nums_of_blocks - 1]);
 
-  printf ("After free the last block, break point %10p\n", (void *)sbrk (0));
+  printf ("After free the last block, break point %10p\n", sbrk (0));
 
   exit (EXIT_SUCCESS);
 }
