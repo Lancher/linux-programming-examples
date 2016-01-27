@@ -105,3 +105,6 @@ Some simple linux programming codes.
 | Code | Descriptions |
 | --- | --- |
 | [thread_create.c](src/thread_create.c) | Create a simple thread.|
+| [thread_mutex.c](src/thread_mutex.c) | Create two threads to increment a value.|
+| [thread_cond.c](src/thread_cond.c) | Simple producers and comsumers.|
+

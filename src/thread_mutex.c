@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Simply create a thread.
+// Simply create two threads increment a value.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,34 +24,66 @@
 
 #include <errno.h>              // errno, perror()
 
+// Global variables
+static int global_val = 0;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 // Function declarations
 void *thread_func (void *);
 
 int
 main (int argc, char **argv)
 {
-  pthread_t t;
+  pthread_t t1, t2;
   void *result;
 
-  // Create a thread.
-  if (pthread_create (&t, NULL, thread_func, "Hello World") < 0) {
+  // Create a thread t1.
+  if (pthread_create (&t1, NULL, thread_func, NULL) != 0) {
     perror ("pthread_create() ");
     exit (EXIT_FAILURE);
   }
 
-  // Wait the thread to be done.
-  if (pthread_join (t, &result) < 0) {
+  // Create a thread t2.
+  if (pthread_create (&t2, NULL, thread_func, NULL) != 0) {
+    perror ("pthread_create() ");
+    exit (EXIT_FAILURE);
+  }
+
+  // Wait the thread t1 to be done.
+  if (pthread_join (t1, NULL) != 0) {
     perror ("pthread_join() ");
     exit (EXIT_FAILURE);
   }
 
-  printf ("Main thread get [%ld].\n", (long) result);
+  // Wait the thread t2 to be done.
+  if (pthread_join (t2, NULL) != 0) {
+    perror ("pthread_join() ");
+    exit (EXIT_FAILURE);
+  }
+
+  printf("global_val: %d\n", global_val);
 
   exit (EXIT_SUCCESS);
 }
 
 void *thread_func (void *arg) {
-  char *str = (char *) arg;
-  printf ("Thread get [%s].\n", str);
-  return (void *) strlen (str);
+  int i;
+
+  for (i = 0; i < 1000000; ++i) {
+    // Lock.
+    if (pthread_mutex_lock (&mutex) != 0) {
+      perror ("pthread_mutex_lock() ");
+      exit (EXIT_FAILURE);
+    }
+
+    // incremant val.
+    ++global_val;
+
+    // Unlock.
+    if (pthread_mutex_unlock (&mutex) != 0) {
+      perror ("pthread_mutex_unlock() ");
+      exit (EXIT_FAILURE);
+    }
+  }
+  return NULL;
 }
