@@ -107,4 +107,36 @@ Some simple linux programming codes.
 | [thread_create.c](src/thread_create.c) | Create a simple thread.|
 | [thread_mutex.c](src/thread_mutex.c) | Create two threads to increment a value.|
 | [thread_cond.c](src/thread_cond.c) | Simple producers and comsumers.|
+| [thread_specific_data.c](src/thread_specific_data.c) | Example of thread-specific data.|
+| [thread_cleanup_handler.c](src/thread_cleanup_handler.c) | Cancel a thread and thread handlers.|
 
+--
+
+##### Group process and control:
+
+| Code | Descriptions |
+| --- | --- |
+| [pgroup_setpgid.c](src/pgroup_setpgid.c) | Set new a process group of a child process.|
+
+--
+
+##### Daemon:
+
+| Code | Descriptions |
+| --- | --- |
+| [daemon.c](src/daemon.c) | Create a daemon process.|
+
+--
+
+##### Libraries:
+
+Build the static library.
+
+```
+>> make
+>> gcc -g -o main main.o -Llib -ldemo
+```
+
+| Code | Descriptions |
+| --- | --- |
+| [build_static_lib](src/build_static_lib) | Build the static library.|
