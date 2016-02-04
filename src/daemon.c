@@ -21,6 +21,7 @@
 
 #include <unistd.h>             // fork(), getpid(), getppid()
 #include <fcntl.h>              // O_RDWR
+#include <sys/stat.h>           // umask()
 
 #include <errno.h>              // errno, perror()
 

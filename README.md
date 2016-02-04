@@ -130,13 +130,22 @@ Some simple linux programming codes.
 
 ##### Libraries:
 
-Build the static library.
-
 ```
+# Build the static library.
 >> make
+# Use the static library.
 >> gcc -g -o main main.o -Llib -ldemo
 ```
 
 | Code | Descriptions |
 | --- | --- |
 | [build_static_lib](src/build_static_lib) | Build the static library.|
+| [build_share_lib](src/build_share_lib) | Build the share library.|
+
+
+##### Pipe:
+
+| Code | Descriptions |
+| --- | --- |
+| [pipe1.c](src/pipe1.c) | Pipe between child and parent process.|
+| [pipe2.c](src/pipe2.c) | Simulate `ls | wc -l`.|

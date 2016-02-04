@@ -1,6 +1,5 @@
 # default compiler
 CC := gcc
-AR := ar
 
 # folders
 SOURCE_DIR := src
@@ -14,17 +13,17 @@ SOURCES := $(wildcard $(SOURCE_DIR)/*.c)
 OBJECTS := $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCES))
 
 # target
-TARGET := $(LIB_DIR)/libdemo.a
+TARGET := $(LIB_DIR)/libdemo.so
 
 # compile flags
-CFLAGS := -Wall -pthread -Werror
+CFLAGS := -Wall -pthread -Werror -fPIC
 INC := -Iinclude
 
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(LIB_DIR)
-	$(AR) -r $@ $^
+	$(CC) -g -shared -o $@ $^
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)
