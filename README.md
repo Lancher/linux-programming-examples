@@ -1,25 +1,23 @@
-## Linux programming in C
-
-#### Introduction :
-
-Some simple linux programming codes.
+## Linux programming examples in C
 
 --
 
 #####  Memory and Allocaton:
 
+- Use `sbrk()` to observe the process heap size (`program break`).
+
 - Memory alignment please refer to `Sven-Hendrik Haase - Alignment in C`.
 
 | Code | Descriptions  |
 | --- | --- |
-| [malloc_free_sbrk.c](src/malloc_free_sbrk.c) | Observe how a program heap size changed by mallocing and freeing memory. |
+| [malloc_free_sbrk.c](src/malloc_free_sbrk.c) | Observe the variation of heap size during malloc() and free().|
 | [memory_align.c](src/memory_align.c) | Demonstrate how "posix_memalign()" work. |
 
 --
 
 ##### Users and Groups:
 
-- Retrieve info in `/etc/passwd` and `/etc/group`.
+- Retrieve infomation in `/etc/passwd` and `/etc/group`.
 
 | Code | Descriptions  |
 | --- | --- |
@@ -30,6 +28,10 @@ Some simple linux programming codes.
 ##### Process Credentials:
 
 - Relation between real user ID(real uid, or ruid), the effective user ID (effective uid, or euid), and the saved user ID (saved uid, or suid).
+
+- Privileged process can use `setuid()` to change three IDs to any value.
+
+- Unprivileged process can use `setuid()` to change euid to the same value as ruid or suid.
 
 - Please refer to paper `Setuid Demystified` for more details.
 
@@ -56,12 +58,13 @@ Some simple linux programming codes.
 
 - The `read()` and “write()` system calls don’t directly initiate disk access. Instead, they simply copy data between a user-space buffer and a buffer in the kernel buffer cache.
 
+- Use `inotify_init()` and `inotify_add_watch()` to monitor files or directories.
 
 | Code | Descriptions  |
 | --- | --- |
 | [direct_io.c](src/direct_io.c) | Using `O_DIRECT` to bypass the buffer cache.|
 | [file_info.c](src/file_info.c) | Get file flags and permission.|
-| [inotify.c](src/inotify.c) | Use inotify to monitor files or directories .|
+| [inotify.c](src/inotify.c) | Use inotify to monitor files or directories.|
 
 --
 
@@ -87,6 +90,17 @@ Some simple linux programming codes.
 
 - The `vfork()` will not copy the parent process's memory space until `exec()` or exit()`.
 
+- Orphan process is parent process ended and child process keep running. The child process will adopt by `INIT` (pid==1) process.
+
+- Zombie process is child exit before parent perform `wait*` operation. The Zombie process release almost all the resources but remains an entry in the kernel’s process table recording the child’s process ID.
+
+- The zombies can NOT be killed by a signal, the only way to remove them from the system is to kill their parent.
+
+```
+# Kill the parent process of zombies.
+kill $(ps -A -o stat,ppid | awk '/[zZ]/{print $2}')
+```
+
 | Code | Descriptions |
 | --- | --- |
 | [process_child.c](src/process_child.c) | Create a child process.|
@@ -100,7 +114,11 @@ Some simple linux programming codes.
 
 ##### Thread:
 
-- Use `clone()` to create a thread.
+- The simplest way to avoid d`eadlocks` is to define a mutex hierarchy. When threads can lock the same set of mutexes, they should always lock them in the same order.
+
+- Thread-specific data is a technique for making an existing function thread-safe without changing its interface.
+
+- Clear handlers will be called when the thread is canceled by `pthread_cancel()`.
 
 | Code | Descriptions |
 | --- | --- |
@@ -113,6 +131,10 @@ Some simple linux programming codes.
 --
 
 ##### Group process and control:
+
+- A process group is a collection of related processes.
+
+- A session is a collection of related process groups.
 
 | Code | Descriptions |
 | --- | --- |
@@ -130,12 +152,9 @@ Some simple linux programming codes.
 
 ##### Libraries:
 
-```
-# Build the static library.
->> make
-# Use the static library.
->> gcc -g -o main main.o -Llib -ldemo
-```
+- Static libraries is known as `libxxxxx.a`.
+
+- Share libraries is known as `libxxxxx.so`.
 
 | Code | Descriptions |
 | --- | --- |
@@ -147,5 +166,5 @@ Some simple linux programming codes.
 
 | Code | Descriptions |
 | --- | --- |
-| [pipe1.c](src/pipe1.c) | Pipe between child and parent process.|
-| [pipe2.c](src/pipe2.c) | Simulate `ls | wc -l`.|
+| [pipe_parent_child.c](src/pipe_parent_child.c) | Pipe between child and parent process.|
+| [pipe_ls_wc.c](src/pipe_ls_wc.c) | Simulate `ls | wc -l`.|

@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Fetch users and groups info in "/etc/passwd" and "/etc/group".
+// Fetch users and groups info in `/etc/passwd` and `/etc/group`.
 
 #include <stdio.h>
 #include <stdlib.h>
