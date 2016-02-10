@@ -161,6 +161,7 @@ kill $(ps -A -o stat,ppid | awk '/[zZ]/{print $2}')
 | [build_static_lib](src/build_static_lib) | Build the static library.|
 | [build_share_lib](src/build_share_lib) | Build the share library.|
 
+--
 
 ##### Pipe:
 
@@ -168,3 +169,14 @@ kill $(ps -A -o stat,ppid | awk '/[zZ]/{print $2}')
 | --- | --- |
 | [pipe_parent_child.c](src/pipe_parent_child.c) | Pipe between child and parent process.|
 | [pipe_ls_wc.c](src/pipe_ls_wc.c) | Simulate `ls | wc -l`.|
+
+--
+
+##### Mmap:
+
+| Code | Descriptions |
+| --- | --- |
+| [mmap_pri_f_map.c](src/mmap_pri_f_map.c) | Create a private file mapping.|
+| [mmap_sh_f_map.c](src/mmap_sh_f_map.c) | Create a shared file mapping.|
+| [mmap_sh_a_map.c](src/mmap_sh_a_map.c) | Create a share anonymous mapping.|
+
