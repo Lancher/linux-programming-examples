@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Create a share anonymous mapping.
+// Create a Posix share anonymous mapping.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,21 +30,39 @@
 int
 main (int argc, char **argv)
 {
-  int *addr;
-  int fd;
+  char *addr;
+  int fd, flags;
+  char name [] = "/pshm", str [] = "Hello World";
+  mode_t perms;
+  struct stat st;
 
-  // Open /dev/zero.
-  if ((fd = open ("/dev/zero", O_RDWR)) < 0) {
-    perror ("open() ");
+  // Read wrtite flags.
+  flags = O_RDWR | O_CREAT;
+
+  // Permissions.
+  perms = 0664;
+
+  // Open named share memory.
+  if ((fd = shm_open (name, flags, perms)) < 0) {
+    perror ("shm_open() ");
+    exit (EXIT_FAILURE);
+  }
+
+  // Named share memory is always init 0 size, so resize it to str length.
+  if (ftruncate (fd, strlen (str)) < 0) {
+    perror ("ftruncate() ");
     exit (EXIT_FAILURE);
   }
 
   // Create a shared anonymous mapping.
-  addr = mmap (NULL, sizeof (int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  addr = mmap (NULL, strlen (str), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (addr == MAP_FAILED) {
     perror ("mmap() ");
     exit (EXIT_FAILURE);
   }
+
+  // Copy str.
+  memcpy (addr, str, strlen (str));
 
   // Close fd.
   if (close (fd) == -1) {
@@ -52,8 +70,11 @@ main (int argc, char **argv)
     exit (EXIT_FAILURE);
   }
 
-  // Init with 1.
-  *addr = 1;
+  // Unmap.
+  if (munmap (addr, sizeof (int)) == -1) {
+    perror ("munmap() ");
+    exit (EXIT_FAILURE);
+  }
 
   // Create a child process.
   switch (fork ()) {
@@ -62,32 +83,41 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
 
     case 0:  // child
-      printf("Child started, value = %d\n", *addr);
-      (*addr)++;
 
-      // Unmap.
-      if (munmap (addr, sizeof (int)) == -1) {
-        perror ("munmap() ");
+      // Open named share memory.
+      if ((fd = shm_open (name, flags, perms)) < 0) {
+        perror ("shm_open() ");
         exit (EXIT_FAILURE);
       }
+
+      // Get file descriptor stats.
+      if (fstat (fd, &st) < 0) {
+        perror ("fstat() ");
+        exit (EXIT_FAILURE);
+      }
+
+      // Create a shared anonymous mapping.
+      addr = mmap (NULL, st.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+      if (addr == MAP_FAILED) {
+        perror ("mmap() ");
+        exit (EXIT_FAILURE);
+      }
+
+      // print memory.
+      write (STDOUT_FILENO, addr, st.st_size);
 
       exit (EXIT_SUCCESS);
 
     default:  // parent
-      // Wait child process.
-      if (wait (NULL) == -1) {
-        perror ("wait() ");
-        exit (EXIT_FAILURE);
-      }
-      printf("In parent, value = %d\n", *addr);
-
-      // Unmap.
-      if (munmap (addr, sizeof (int)) == -1) {
-        perror ("munmap() ");
-        exit (EXIT_FAILURE);
-      }
-
-      exit (EXIT_SUCCESS);
+      break;
   }
+
+  // Wait child process.
+  if (wait (NULL) == -1) {
+    perror ("wait() ");
+    exit (EXIT_FAILURE);
+  }
+
+  exit (EXIT_SUCCESS);
 
 }

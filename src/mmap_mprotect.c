@@ -14,7 +14,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// Create a share anonymous mapping.
+// Change virtual memory protection.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,8 +30,12 @@
 int
 main (int argc, char **argv)
 {
-  int *addr;
-  int fd;
+  char cmd[100];
+  char *addr;
+  int fd, page_size;
+
+  // Get page size.
+  page_size = sysconf (_SC_PAGESIZE);
 
   // Open /dev/zero.
   if ((fd = open ("/dev/zero", O_RDWR)) < 0) {
@@ -39,8 +43,8 @@ main (int argc, char **argv)
     exit (EXIT_FAILURE);
   }
 
-  // Create a shared anonymous mapping.
-  addr = mmap (NULL, sizeof (int), PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  // Create a private file mapping.
+  addr = mmap (NULL, page_size, PROT_NONE, MAP_SHARED, fd, 0);
   if (addr == MAP_FAILED) {
     perror ("mmap() ");
     exit (EXIT_FAILURE);
@@ -52,42 +56,18 @@ main (int argc, char **argv)
     exit (EXIT_FAILURE);
   }
 
-  // Init with 1.
-  *addr = 1;
+  // Create cmd.
+  snprintf (cmd, sizeof (cmd), "cat /proc/%ld/maps | grep zero", (long) getpid());
+  system (cmd);
 
-  // Create a child process.
-  switch (fork ()) {
-    case -1:
-      perror ("fork() ");
-      exit (EXIT_FAILURE);
-
-    case 0:  // child
-      printf("Child started, value = %d\n", *addr);
-      (*addr)++;
-
-      // Unmap.
-      if (munmap (addr, sizeof (int)) == -1) {
-        perror ("munmap() ");
-        exit (EXIT_FAILURE);
-      }
-
-      exit (EXIT_SUCCESS);
-
-    default:  // parent
-      // Wait child process.
-      if (wait (NULL) == -1) {
-        perror ("wait() ");
-        exit (EXIT_FAILURE);
-      }
-      printf("In parent, value = %d\n", *addr);
-
-      // Unmap.
-      if (munmap (addr, sizeof (int)) == -1) {
-        perror ("munmap() ");
-        exit (EXIT_FAILURE);
-      }
-
-      exit (EXIT_SUCCESS);
+  // Change virtual memory protection.
+  if (mprotect (addr, page_size, PROT_READ | PROT_WRITE) == -1) {
+    perror ("mprotect() ");
+    exit (EXIT_FAILURE);
   }
+
+  // Create cmd.
+  snprintf (cmd, sizeof (cmd), "cat /proc/%ld/maps | grep zero", (long) getpid());
+  system (cmd);
 
 }

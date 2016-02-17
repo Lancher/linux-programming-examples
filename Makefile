@@ -19,7 +19,7 @@ all: $(TARGETS)
 
 $(BIN_DIR)/%: $(BUILD_DIR)/%.o
 	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $< -o $@ -lrt
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)

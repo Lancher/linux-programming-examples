@@ -174,9 +174,26 @@ kill $(ps -A -o stat,ppid | awk '/[zZ]/{print $2}')
 
 ##### Mmap:
 
+- Four types of `Private File Mapping`, `Share File Mapping`, `Private Anonymous Mapping` and `Shared Anonymous Mapping`.
+
 | Code | Descriptions |
 | --- | --- |
 | [mmap_pri_f_map.c](src/mmap_pri_f_map.c) | Create a private file mapping.|
 | [mmap_sh_f_map.c](src/mmap_sh_f_map.c) | Create a shared file mapping.|
 | [mmap_sh_a_map.c](src/mmap_sh_a_map.c) | Create a share anonymous mapping.|
+| [mmap_mprotect.c](src/mmap_mprotect.c) | Change virtual memory protection.|
 
+
+##### POSIX IPC:
+
+- Posix Message Queues.
+
+- Posix semaphore.
+
+- Posix shared memory.
+
+| Code | Descriptions |
+| --- | --- |
+| [pmq_exchange.c](src/pmq_exchange.c) | Using POSIX message queue exchage data between parent process and child process.|
+| [psem_get_val.c](src/psem_get_val.c) | Using POSIX semaphore to race a value.|
+| [pshm.c](src/pshm.c) | Create a Posix shared anonymous mapping.|
